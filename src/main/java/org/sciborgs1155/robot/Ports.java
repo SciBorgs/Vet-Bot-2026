@@ -1,8 +1,7 @@
 package org.sciborgs1155.robot;
 
-import static java.util.Map.entry;
-
 import java.util.Map;
+import static java.util.Map.entry;
 
 public final class Ports {
   // TODO: Add and change all ports as needed.
@@ -45,6 +44,11 @@ public final class Ports {
     public static final int REAR_LEFT_CANCODER = 7;
     public static final int FRONT_RIGHT_CANCODER = 6;
     public static final int REAR_RIGHT_CANCODER = 8;
+  }
+
+  public static final class Roller {
+    public static final int LEFT_MOTOR = 21;
+    public static final int RIGHT_MOTOR = 0;
   }
 
   public static final class LEDs {
