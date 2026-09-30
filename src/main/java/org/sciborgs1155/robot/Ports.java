@@ -21,7 +21,17 @@ public final class Ports {
           entry(Drive.FRONT_LEFT_CANCODER, "FL cancoder"),
           entry(Drive.REAR_LEFT_CANCODER, "RL cancoder"),
           entry(Drive.FRONT_RIGHT_CANCODER, "FR cancoder"),
-          entry(Drive.REAR_RIGHT_CANCODER, "RR cancoder"));
+          entry(Drive.REAR_RIGHT_CANCODER, "RR cancoder"),
+          entry(Shooter.LEADER, "shooter leader (top)"),
+          entry(Shooter.FOLLOWER, "shooter follower (bottom)"));
+
+  /** Shooter motor IDs on the shooting CAN bus. Verify against this robot's wiring. */
+  public static final class Shooter {
+    public static final int LEADER = 28;
+    public static final int FOLLOWER = 29;
+
+    private Shooter() {}
+  }
 
   public static final class OI {
     public static final int OPERATOR = 0;

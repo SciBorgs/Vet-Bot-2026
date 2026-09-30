@@ -39,6 +39,7 @@ import org.sciborgs1155.robot.Ports.OI;
 import org.sciborgs1155.robot.commands.Alignment;
 import org.sciborgs1155.robot.commands.Autos;
 import org.sciborgs1155.robot.drive.Drive;
+import org.sciborgs1155.robot.shooter.Shooter;
 import org.sciborgs1155.robot.vision.Vision;
 
 /**
@@ -58,6 +59,7 @@ public class Robot extends CommandRobot {
   // SUBSYSTEMS
   private final Drive drive = Drive.create();
   private final Vision vision = Vision.create();
+  private final Shooter shooter = Shooter.create();
 
   // COMMANDS
   private final Alignment align = new Alignment(drive);
@@ -220,7 +222,8 @@ public class Robot extends CommandRobot {
   }
 
   public Command systemsCheck() {
-    return Commands.sequence(drive.systemsCheck()).withName("Test Mechanisms");
+    return Commands.sequence(drive.systemsCheck(), shooter.systemsCheck())
+        .withName("Test Mechanisms");
   }
 
   @Override
@@ -230,5 +233,6 @@ public class Robot extends CommandRobot {
       drive.close();
     } catch (Exception e) {
     }
+    shooter.close();
   }
 }

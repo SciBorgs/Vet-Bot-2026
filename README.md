@@ -7,7 +7,7 @@ The SciBorgs' base repository. It is a living document that should be updated ye
 ## Structure
 Our robot code is centered around [Robot.java](<src/main/java/org/sciborgs1155/robot/Robot.java>).
 
-This project currently contains drive, vision, autos, pathing, and LEDs. You are expected to add/modify code supporting existing files and new subsystems when using this template! Some of these files include but are not limited to:
+This project currently contains drive, vision, autos, pathing, LEDs, and a shooter. You are expected to add/modify code supporting existing files and new subsystems when using this template! Some of these files include but are not limited to:
 
 - **[Autos.java](src/main/java/org/sciborgs1155/robot/commands/Autos.java)** Add code for new subsystems in `configureAutos`, such as commands for `NamedCommands`
 - **[DriveConstants.java](src/main/java/org/sciborgs1155/robot/drive/DriveConstants.java)** Modify control constants yearly for each new robot, and all drivetrain constants for each new drivetrain as needed.
@@ -17,6 +17,12 @@ This project currently contains drive, vision, autos, pathing, and LEDs. You are
 - **[Ports.java](src/main/java/org/sciborgs1155/robot/Ports.java)** Modify existing OI and drive ports, as well as adding new ports and their names.
 - **[Robot.java](src/main/java/org/sciborgs1155/robot/Robot.java)** A lot: subsystems, command files, related triggers & bindings, interactions with other subsystems & files, library configurations/starting, etc..
 - **[Scisoc](<resources/Scisoc - The Borg's Prayer.md>)** Update yearly.
+
+## Shooter subsystem
+
+The [shooter](src/main/java/org/sciborgs1155/robot/shooter/Shooter.java) controls a two-motor flywheel by velocity in radians per second. It uses a profiled PID controller and feedforward. `WheelIO` separates TalonFX hardware, a flywheel simulation, and a no-op wheel. The robot creates the real or simulated shooter and includes it in the test-mode systems check. The default command removes voltage and lets the wheels coast; `runShooter(...)` holds a requested speed and `idleShooter()` maintains a low speed without braking from a higher speed.
+
+The current hardware setup and initial tuning values come from [Rebuilt-2026](https://github.com/SciBorgs/Rebuilt-2026): shooting CAN bus `shooting`, leader ID 28, follower ID 29, two Kraken X60 motors, and a 2-inch wheel radius. Verify wiring, motor direction, gearing, current limits, and control gains on this robot before running the real shooter. Feeding and shot selection are not part of this subsystem.
 
 ## Dependencies
 - General
