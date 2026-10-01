@@ -6,7 +6,7 @@ import static edu.wpi.first.units.Units.Radians;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 
-public class EndEffectorPivotConstants {
+public class EndEffectorPivotHold {
   public static final Current CURRENT_LIMIT = Amps.of(30);
 
   public static final double GEARING = 5;

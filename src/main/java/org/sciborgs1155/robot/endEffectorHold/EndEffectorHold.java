@@ -26,19 +26,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.sciborgs1155.lib.SimpleMotor;
 import org.sciborgs1155.robot.Robot;
 
-public class EndEffectorPivot extends SubsystemBase implements AutoCloseable {
+public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
   private final SimpleMotor hardware;
   private final ProfiledPIDController pid = new ProfiledPIDController(kP, kI, kP, new Constraints(MAX_VELOCITY, MAX_ACCEL));
   private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(kS, kV, kA);
 
-  public EndEffectorPivot(SimpleMotor hardware) {
+  public EndEffectorHold(SimpleMotor hardware) {
     this.hardware = hardware;
     pid.setTolerance(POSITION_TOLERANCE.in(Radians));
     setDefaultCommand(stop());
   }
 
-  public static EndEffectorPivot create() {
-    return Robot.isReal() ? new EndEffectorPivot(realMotor()) : none();
+  public static EndEffectorHold create() {
+    return Robot.isReal() ? new EndEffectorHold(realMotor()) : none();
   }
 
   private static SimpleMotor realMotor() {
@@ -51,12 +51,16 @@ public class EndEffectorPivot extends SubsystemBase implements AutoCloseable {
     return SimpleMotor.talon(motor, config);
   }
 
-  public static EndEffectorPivot none() {
-    return new EndEffectorPivot(SimpleMotor.none());
+  public static EndEffectorHold none() {
+    return new EndEffectorHold(SimpleMotor.none());
   }
 
-  public Command turn(double voltage) {
+  public Command in(double voltage) {
     return run(() -> hardware.set(voltage));
+  }
+
+  public Command out(double voltage) {
+    return run(() -> hardware.set(-voltage));
   }
 
   public Command stop() {
