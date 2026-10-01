@@ -29,7 +29,6 @@ import org.sciborgs1155.lib.LoggingUtils;
 import org.sciborgs1155.lib.Tuning;
 import org.sciborgs1155.robot.Robot;
 
-/** Velocity controlled flywheel, with real, simulated, and no-op hardware implementations. */
 public final class Shooter extends SubsystemBase implements AutoCloseable {
   private final WheelIO hardware;
 
@@ -51,14 +50,29 @@ public final class Shooter extends SubsystemBase implements AutoCloseable {
   @NotLogged private final DoubleEntry tuningV = Tuning.entry("Robot/tuning/shooter/V", V);
   @NotLogged private final DoubleEntry tuningA = Tuning.entry("Robot/tuning/shooter/A", A);
 
+  /**
+   * Returns the shooter subsystem.
+   *
+   * @return Creates the real or simulated shooter based on {@link Robot#isReal()}.
+   */
   public static Shooter create() {
     return Robot.isReal() ? new Shooter(new RealWheel()) : new Shooter(new SimWheel());
   }
 
+  /**
+   * Returns a shooter subsystem with no hardware.
+   *
+   * @return A shooter that does not drive any real motors.
+   */
   public static Shooter none() {
     return new Shooter(new FakeWheel());
   }
 
+  /**
+   * Sets the shooter's default command and PID tolerance.
+   *
+   * @param hardware Takes in the WheelIO class.
+   */
   public Shooter(WheelIO hardware) {
     this.hardware = hardware;
     controller.setTolerance(VELOCITY_TOLERANCE.in(RadiansPerSecond));
@@ -84,7 +98,13 @@ public final class Shooter extends SubsystemBase implements AutoCloseable {
     setDefaultCommand(stopShooter());
   }
 
-  /** Update the controller. The requested speed and output voltage are clamped. */
+  /**
+   * Updates the velocity setpoint of the motor.
+   *
+   * @param velocitySetpoint The value of the velocity setpoint (rad/s).
+   * @param noDeceleration If true, sends no negative voltage so the flywheel can coast down rather
+   *     than fighting itself.
+   */
   public void update(double velocitySetpoint, boolean noDeceleration) {
     double goal =
         MathUtil.clamp(
@@ -99,48 +119,93 @@ public final class Shooter extends SubsystemBase implements AutoCloseable {
     hardware.setVoltage(noDeceleration ? Math.max(0, volts) : volts);
   }
 
+  /**
+   * Updates the velocity setpoint of the motor.
+   *
+   * @param velocitySetpoint The value of the velocity setpoint (rad/s).
+   */
   public void update(double velocitySetpoint) {
     update(velocitySetpoint, false);
   }
 
+  /**
+   * Checks if the PID controller is at the velocity setpoint.
+   *
+   * @return Whether the controller is at the current setpoint.
+   */
   @Logged
   public boolean atSetpoint() {
     return controller.atSetpoint();
   }
 
+  /**
+   * Checks if the current velocity matches the target velocity within tolerance.
+   *
+   * @param desiredVelocity The target velocity to compare against.
+   * @return True if the actual wheel speed is within tolerance.
+   */
   public boolean atVelocity(double desiredVelocity) {
     return Math.abs(desiredVelocity - velocity()) < VELOCITY_TOLERANCE.in(RadiansPerSecond);
   }
 
+  /**
+   * Returns the controller setpoint.
+   *
+   * @return The current target velocity for the shooter.
+   */
   @Logged
   public double setpoint() {
     return controller.getSetpoint().position;
   }
 
+  /**
+   * Returns the shooter velocity.
+   *
+   * @return The current flywheel velocity in radians per second.
+   */
   @Logged
   public double velocity() {
     return hardware.velocity();
   }
 
-  /** Hold a requested speed in radians per second until interrupted. */
+  /**
+   * Runs the shooter at a specified velocity.
+   *
+   * @param velocity The desired velocity as a DoubleSupplier.
+   * @return The command to set the shooter's velocity.
+   */
   public Command runShooter(DoubleSupplier velocity) {
     return run(() -> update(velocity.getAsDouble()))
         .finallyDo(() -> hardware.setVoltage(0))
         .withName("running shooter");
   }
 
+  /**
+   * Runs the shooter at a specified velocity.
+   *
+   * @param velocity The desired velocity as a double.
+   * @return The command to set the shooter's velocity.
+   */
   public Command runShooter(double velocity) {
     return runShooter(() -> velocity);
   }
 
-  /** Maintain a low speed while allowing the flywheel to coast down from faster speeds. */
+  /**
+   * Idles the shooter while letting the flywheel coast down naturally.
+   *
+   * @return The command that keeps the flywheel near the idle speed.
+   */
   public Command idleShooter() {
     return run(() -> update(IDLE_VELOCITY.in(RadiansPerSecond), true))
         .finallyDo(() -> hardware.setVoltage(0))
         .withName("idle shooter");
   }
 
-  /** Remove voltage and coast. This is the default when no shooter command is scheduled. */
+  /**
+   * Stops the shooter and clears the motor output.
+   *
+   * @return The command used as the subsystem's default stop behavior.
+   */
   public Command stopShooter() {
     return run(
             () -> {
@@ -150,7 +215,11 @@ public final class Shooter extends SubsystemBase implements AutoCloseable {
         .withName("stop shooter");
   }
 
-  /** Adjust the velocity goal using a controller input. */
+  /**
+   * Manual control of the shooter with a controller input stream.
+   *
+   * @param input The controller value to use for manual control.
+   */
   public Command manualShooter(InputStream input) {
     return runShooter(
             input
@@ -161,6 +230,11 @@ public final class Shooter extends SubsystemBase implements AutoCloseable {
         .withName("manual shooter");
   }
 
+  /**
+   * Does a quick check to confirm the shooter can reach a target speed.
+   *
+   * @return A command that validates the flywheel speed against a fixed goal.
+   */
   public Command systemsCheck() {
     double goal = 200;
     return runShooter(goal)
@@ -177,6 +251,7 @@ public final class Shooter extends SubsystemBase implements AutoCloseable {
   public void periodic() {
     Command command = getCurrentCommand();
     LoggingUtils.log("Robot/shooter/current command", command == null ? "None" : command.getName());
+    LoggingUtils.log("Robot/shooter/velocity", velocity());
     if (TUNING) {
       controller.setP(tuningP.get());
       controller.setI(tuningI.get());
