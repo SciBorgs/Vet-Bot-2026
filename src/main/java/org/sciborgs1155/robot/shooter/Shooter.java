@@ -218,16 +218,16 @@ public final class Shooter extends SubsystemBase implements AutoCloseable {
   /**
    * Manual control of the shooter with a controller input stream.
    *
+   * <p>The joystick input is converted to a speed in radians per second and then multiplied by the
+   * scheduler period so the stream adjusts the target setpoint as a per-cycle delta instead of a
+   * direct instantaneous jump.
+   *
    * @param input The controller value to use for manual control.
    */
   public Command manualShooter(InputStream input) {
-    return runShooter(
-            input
-                .deadband(0.15, 1)
-                .scale(MAX_VELOCITY.in(RadiansPerSecond))
-                .scale(PERIOD.in(Seconds))
-                .add(this::setpoint))
-        .withName("manual shooter");
+    InputStream adjustedSetpointDelta =
+        input.deadband(0.15, 1).scale(MAX_VELOCITY.in(RadiansPerSecond)).scale(PERIOD.in(Seconds));
+    return runShooter(adjustedSetpointDelta.add(this::setpoint)).withName("manual shooter");
   }
 
   /**
@@ -236,7 +236,7 @@ public final class Shooter extends SubsystemBase implements AutoCloseable {
    * @return A command that validates the flywheel speed against a fixed goal.
    */
   public Command systemsCheck() {
-    double goal = 200;
+    double goal = SYSTEMS_CHECK_VELOCITY.in(RadiansPerSecond);
     return runShooter(goal)
         .until(this::atSetpoint)
         .withTimeout(5)
@@ -252,6 +252,7 @@ public final class Shooter extends SubsystemBase implements AutoCloseable {
     Command command = getCurrentCommand();
     LoggingUtils.log("Robot/shooter/current command", command == null ? "None" : command.getName());
     LoggingUtils.log("Robot/shooter/velocity", velocity());
+    LoggingUtils.log("Robot/shooter/setpoint", setpoint());
     if (TUNING) {
       controller.setP(tuningP.get());
       controller.setI(tuningI.get());

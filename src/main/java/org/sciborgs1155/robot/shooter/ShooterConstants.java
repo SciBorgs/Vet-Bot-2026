@@ -18,6 +18,7 @@ public final class ShooterConstants {
   public static final AngularVelocity IDLE_VELOCITY = RadiansPerSecond.of(50);
   public static final AngularVelocity MAX_VELOCITY = RadiansPerSecond.of(400);
   public static final AngularVelocity VELOCITY_TOLERANCE = RadiansPerSecond.of(5);
+  public static final AngularVelocity SYSTEMS_CHECK_VELOCITY = RadiansPerSecond.of(200);
   public static final double MAX_PROFILE_VELOCITY = 5000; // rad/s
   public static final double MAX_PROFILE_ACCELERATION = 2000; // rad/s^2
 
