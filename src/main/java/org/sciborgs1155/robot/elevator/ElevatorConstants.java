@@ -12,16 +12,16 @@ import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Mass;
 
-public class ElevatorConstants {
+public final class ElevatorConstants {
 
-  public static final double kP = 0.0;
-  public static final double kI = 0.0;
-  public static final double kD = 0.0;
+  public static final double KP = 0.0;
+  public static final double KI = 0.0;
+  public static final double KD = 0.0;
 
-  public static final double kS = 0.0;
-  public static final double kG = 0.0;
-  public static final double kV = 0.0;
-  public static final double kA = 0.0;
+  public static final double KS = 0.0;
+  public static final double KG = 0.0;
+  public static final double KV = 0.0;
+  public static final double KA = 0.0;
 
   public static final Mass MASS = Kilogram.of(0);
   public static final Distance RADIUS = Meters.of(0);
@@ -41,4 +41,6 @@ public class ElevatorConstants {
 
   public static final double HOMING_VOLTAGE = 0;
   public static final double VELOCITY_TOLERANCE = 0;
+
+  private ElevatorConstants() {}
 }

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 public class SimElevator implements ElevatorIO {
   private final ElevatorSim sim;
 
+  /** creates sim elevator with real motor values */
   public SimElevator() {
     sim =
         new ElevatorSim(

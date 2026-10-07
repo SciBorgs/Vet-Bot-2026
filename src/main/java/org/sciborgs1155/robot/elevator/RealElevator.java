@@ -16,6 +16,7 @@ public class RealElevator implements ElevatorIO {
   private final TalonFX leader = new TalonFX(FRONT_LEADER);
   private final TalonFX follower = new TalonFX(BACK_FOLLOWER);
 
+  /** creates elevator with real motor constraints */
   public RealElevator() {
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
 
@@ -38,31 +39,16 @@ public class RealElevator implements ElevatorIO {
   }
 
   @Override
-  /**
-   * Sets the voltage for the elevator motor.
-   *
-   * @param voltage The voltage to set.
-   */
   public void setVoltage(double volts) {
     leader.setVoltage(volts);
   }
 
   @Override
-  /**
-   * Gets the current position of the elevator.
-   *
-   * @return The current position.
-   */
   public double position() {
     return leader.getPosition().getValueAsDouble();
   }
 
   @Override
-  /**
-   * Gets the current velocity of the elevator.
-   *
-   * @return The current velocity.
-   */
   public double velocity() {
     return leader.getVelocity().getValueAsDouble();
   }
@@ -73,11 +59,6 @@ public class RealElevator implements ElevatorIO {
   }
 
   @Override
-  /**
-   * Closes the elevator.
-   *
-   * @throws Exception if an error occurs.
-   */
   public void close() throws Exception {
     leader.close();
     follower.close();

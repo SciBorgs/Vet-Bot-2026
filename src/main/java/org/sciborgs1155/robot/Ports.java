@@ -62,5 +62,7 @@ public final class Ports {
   public static final class Elevator {
     public static final int FRONT_LEADER = 0;
     public static final int BACK_FOLLOWER = 0;
+
+    private Elevator() {}
   }
 }
