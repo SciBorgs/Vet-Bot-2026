@@ -1,26 +1,17 @@
-package org.sciborgs1155.robot.endEffectorPivot;
+package org.sciborgs1155.robot.endEffectorHold;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Radians;
 import static org.sciborgs1155.robot.Ports.EndEffector.*;
-import static org.sciborgs1155.robot.endEffector.EndEffectorConstants.CURRENT_LIMIT;
-import static org.sciborgs1155.robot.endEffector.EndEffectorConstants.GEARING;
-import static org.sciborgs1155.robot.endEffector.EndEffectorConstants.MAX_ACCEL;
-import static org.sciborgs1155.robot.endEffector.EndEffectorConstants.MAX_VELOCITY;
-import static org.sciborgs1155.robot.endEffector.EndEffectorConstants.POSITION_TOLERANCE;
-import static org.sciborgs1155.robot.endEffector.EndEffectorConstants.kD;
-import static org.sciborgs1155.robot.endEffector.EndEffectorConstants.kI;
-import static org.sciborgs1155.robot.endEffector.EndEffectorConstants.kP;
+import static org.sciborgs1155.robot.endEffectorHold.EndEffectorHoldConstants.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.sciborgs1155.lib.SimpleMotor;
@@ -28,7 +19,8 @@ import org.sciborgs1155.robot.Robot;
 
 public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
   private final SimpleMotor hardware;
-  private final ProfiledPIDController pid = new ProfiledPIDController(kP, kI, kP, new Constraints(MAX_VELOCITY, MAX_ACCEL));
+  private final ProfiledPIDController pid =
+      new ProfiledPIDController(kP, kI, kP, new Constraints(MAX_VELOCITY, MAX_ACCEL));
   private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(kS, kV, kA);
 
   public EndEffectorHold(SimpleMotor hardware) {
@@ -64,7 +56,7 @@ public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
   }
 
   public Command stop() {
-    return turn(0);
+    return in(0);
   }
 
   @Override

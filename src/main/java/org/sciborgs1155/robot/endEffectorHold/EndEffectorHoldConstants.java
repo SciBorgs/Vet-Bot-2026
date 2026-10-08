@@ -1,4 +1,4 @@
-package org.sciborgs1155.robot.endEffectorPivot;
+package org.sciborgs1155.robot.endEffectorHold;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Radians;
@@ -6,7 +6,7 @@ import static edu.wpi.first.units.Units.Radians;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 
-public class EndEffectorPivotHold {
+public class EndEffectorHoldConstants {
   public static final Current CURRENT_LIMIT = Amps.of(30);
 
   public static final double GEARING = 5;

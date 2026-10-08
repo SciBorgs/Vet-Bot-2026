@@ -49,11 +49,11 @@ public final class Ports {
 
   public static final class EndEffector {
     public static final int MOTOR_CLAW = 50; // TODO: Change all 3
-    public static final int MOTOR_PIVOT = 51;
+    public static final int MOTOR_PIVOT = 9;
     public static final int ENCODER = 52;
   }
 
   public static final class LEDs {
-    public static final int LED_PORT = 9;
+    public static final int LED_PORT = 10;
   }
 }
