@@ -48,7 +48,7 @@ public final class Ports {
   }
 
   public static final class EndEffector {
-    public static final int MOTOR_CLAW = 50; // TODO: Change all 3
+    public static final int MOTOR_CLAW = 8; // TODO: Change all 3
     public static final int MOTOR_PIVOT = 9;
     public static final int ENCODER = 52;
   }

@@ -9,6 +9,11 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -34,12 +39,14 @@ public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
   }
 
   private static SimpleMotor realMotor() {
-    final TalonFX motor = new TalonFX(MOTOR_PIVOT);
-    TalonFXConfiguration config = new TalonFXConfiguration();
-    config.CurrentLimits.SupplyCurrentLimit = CURRENT_LIMIT.in(Amps);
-    config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    config.Feedback.SensorToMechanismRatio = GEARING;
+    final MotorType motorType = MotorType.kBrushless;
+    final SparkMax motor = new SparkMax(MOTOR_PIVOT, null);
+    SparkMaxConfig config = new SparkMaxConfig();
+    config.smartCurrentLimit((int) CURRENT_LIMIT.in(Amps));
+    config.idleMode(IdleMode.kBrake);
+    config.inverted(true);
+    // config.Feedback.SensorToMechanismRatio = GEARING;
+    //TODO: Config gearing on encoder
     return SimpleMotor.talon(motor, config);
   }
 
