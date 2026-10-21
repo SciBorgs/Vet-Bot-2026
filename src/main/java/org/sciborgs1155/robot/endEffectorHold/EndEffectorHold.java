@@ -5,15 +5,10 @@ import static edu.wpi.first.units.Units.Radians;
 import static org.sciborgs1155.robot.Ports.EndEffector.*;
 import static org.sciborgs1155.robot.endEffectorHold.EndEffectorHoldConstants.*;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -46,8 +41,8 @@ public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
     config.idleMode(IdleMode.kBrake);
     config.inverted(true);
     // config.Feedback.SensorToMechanismRatio = GEARING;
-    //TODO: Config gearing on encoder
-    return SimpleMotor.talon(motor, config);
+    // TODO: Config gearing on encoder
+    return SimpleMotor.spark(motor, config);
   }
 
   public static EndEffectorHold none() {
