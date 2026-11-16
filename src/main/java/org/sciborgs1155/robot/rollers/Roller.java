@@ -1,16 +1,16 @@
 package org.sciborgs1155.robot.rollers;
 
 import org.sciborgs1155.lib.SimpleMotor;
-import static org.sciborgs1155.robot.Ports.Roller.*;
 import org.sciborgs1155.robot.Robot;
+
+import static org.sciborgs1155.robot.Ports.Roller.*;
 import static org.sciborgs1155.robot.rollers.RollerConstants.CURRENT_LIMIT;
-import static org.sciborgs1155.robot.rollers.RollerConstants.GEARING;
+//import static org.sciborgs1155.robot.rollers.RollerConstants.GEARING;
 import static org.sciborgs1155.robot.rollers.RollerConstants.ROLLER_POWER;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import static edu.wpi.first.units.Units.Amps;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,13 +32,13 @@ public class Roller extends SubsystemBase implements AutoCloseable {
     }
 
     private static SimpleMotor realMotor(int port) {
-        final TalonFX motor = new TalonFX(port);
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.CurrentLimits.SupplyCurrentLimit = CURRENT_LIMIT.in(Amps);
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-        config.Feedback.SensorToMechanismRatio = GEARING;
-        return SimpleMotor.talon(motor, config);
+        final SparkMax motor = new SparkMax(port, null);
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.smartCurrentLimit((int) CURRENT_LIMIT.in(Amps));
+        config.idleMode(IdleMode.kBrake);
+        config.inverted(true);
+        //config.SensorToMechanismRatio = GEARING; TODO
+        return SimpleMotor.spark(motor, config);
     }
 
     public static Roller none() {
