@@ -33,12 +33,12 @@ public class SimPivot implements PivotIO {
   }
 
   @Override
-  public void close() throws Exception {
-    sim.setInputVoltage(0);
+  public double current() {
+    return sim.getCurrentDrawAmps();
   }
 
   @Override
-  public double current() {
-    return sim.getCurrentDrawAmps();
+  public void close() throws Exception {
+    sim.setInputVoltage(0);
   }
 }

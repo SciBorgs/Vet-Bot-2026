@@ -2,41 +2,40 @@ package org.sciborgs1155.robot.pivot;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Radians;
+
 import static org.sciborgs1155.robot.Ports.Pivot.*;
 import static org.sciborgs1155.robot.pivot.PivotConstants.*;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import org.sciborgs1155.lib.TalonUtils;
+import com.revrobotics.ResetMode;
+import com.revrobotics.PersistMode;
+import com.revrobotics.spark.SparkMax;
+
+import org.sciborgs1155.lib.FaultLogger;
+
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class RealPivot implements PivotIO {
-  private final TalonFX motor;
+  private final SparkMax motor;
   private final CANcoder encoder;
 
   public RealPivot() {
-    motor = new TalonFX(MOTOR);
+    motor = new SparkMax(MOTOR, MotorType.kBrushless);
     encoder = new CANcoder(ENCODER);
 
-    TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+    SparkMaxConfig motorConfig = new SparkMaxConfig();
     CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
 
-    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorConfig.CurrentLimits.SupplyCurrentLimit = CURRENT_LIMIT.in(Amps);
-    motorConfig.Feedback.FeedbackRemoteSensorID = ENCODER;
-    motorConfig.Feedback.SensorToMechanismRatio = 1;
-    motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorConfig.smartCurrentLimit((int) CURRENT_LIMIT.in(Amps));
+    motorConfig.idleMode(IdleMode.kBrake);
+    motorConfig.inverted(true);
 
-    // encoderConfig.MagnetSensor.MagnetOffset = -0.824462890625; tbd
-    encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.9;
-
-    motor.getConfigurator().apply(motorConfig);
-    encoder.getConfigurator().apply(encoderConfig);
-
-    TalonUtils.addMotor(motor);
+    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    FaultLogger.register(motor);
+    FaultLogger.register(encoder);
   }
 
   @Override
@@ -51,7 +50,7 @@ public class RealPivot implements PivotIO {
 
   @Override
   public double current() {
-    return motor.getStatorCurrent().getValueAsDouble();
+    return motor.getOutputCurrent();
   }
 
   @Override

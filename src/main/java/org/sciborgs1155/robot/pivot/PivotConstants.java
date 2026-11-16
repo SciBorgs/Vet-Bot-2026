@@ -45,22 +45,13 @@ public class PivotConstants {
   public static final Constraints CONSTRAINTS =
       new Constraints(
           MAX_VELOCITY.in(RadiansPerSecond), MAX_ACCELERATION.in(RadiansPerSecondPerSecond));
-  // 4-bar, old
-  // public static final DCMotor GEARBOX = DCMotor.getKrakenX44(1);
-  // public static final double GEARING = 27;
-  // public static final double MOI = 0.2135396026; // moment of inertia
-  // public static final Distance LENGTH = Inches.of(18.5);
-  // public static final Angle MIN_ANGLE = Degrees.of(9.7);
-  // public static final Angle MAX_ANGLE = Degrees.of(83.7);
-  // public static final Angle START_ANGLE = MAX_ANGLE;
 
-  // new slapdown
   public static final DCMotor GEARBOX = DCMotor.getKrakenX60(1);
   public static final double GEARING = 25.0 * 2.5; // ratio of gearing
   public static final double MOI = 0.2135396026; // moment of inertia
   public static final Distance LENGTH = Inches.of(18.5);
   public static final Angle MIN_ANGLE = Radians.of(0.0); // 0.0
-  public static final Angle MAX_ANGLE = Radians.of(1.864 - 0.07); // 1.864 // 2.04
+  public static final Angle MAX_ANGLE = Radians.of(1.794);
   public static final Angle START_ANGLE = MAX_ANGLE;
 
   public static final Angle POSITION_TOLERANCE = Radians.of(0.07);
@@ -70,5 +61,5 @@ public class PivotConstants {
   public static final Angle SQUEEZE_RETRACT = Degrees.of(0);
   public static final Angle SQUEEZE_EXTEND = Degrees.of(60);
   public static final double SQUEEZE_VOLTS = 2.0;
-  public static final double STALLING_CURRENT = 40.0; // if over, motor is stalling
+  public static final double STALLING_CURRENT = 40.0;
 }

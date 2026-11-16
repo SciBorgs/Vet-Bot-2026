@@ -31,8 +31,6 @@ public class Pivot extends SubsystemBase implements AutoCloseable {
     pid.reset(hardware.position());
     pid.setGoal(START_ANGLE.in(Radians));
 
-    // setDefaultCommand(nothing());
-
     sysIdRoutine =
         new SysIdRoutine(
             new Config(

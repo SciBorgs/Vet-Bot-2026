@@ -11,10 +11,10 @@ public class NoPivot implements PivotIO {
   }
 
   @Override
-  public void close() throws Exception {}
-
-  @Override
   public double current() {
     return 0;
   }
+
+  @Override
+  public void close() throws Exception {}
 }
