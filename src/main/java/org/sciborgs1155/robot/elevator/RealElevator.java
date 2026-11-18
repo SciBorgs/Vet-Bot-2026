@@ -1,41 +1,37 @@
 package org.sciborgs1155.robot.elevator;
 
 import static edu.wpi.first.units.Units.Amps;
-import static org.sciborgs1155.lib.FaultLogger.register;
 import static org.sciborgs1155.robot.Ports.Elevator.*;
 import static org.sciborgs1155.robot.elevator.ElevatorConstants.*;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import org.sciborgs1155.lib.TalonUtils;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public class RealElevator implements ElevatorIO {
-  private final TalonFX leader = new TalonFX(FRONT_LEADER);
-  private final TalonFX follower = new TalonFX(BACK_FOLLOWER);
 
-  /** creates elevator with real motor constraints */
-  public RealElevator() {
-    TalonFXConfiguration talonConfig = new TalonFXConfiguration();
+  private final SparkMax leader = new SparkMax(FRONT_LEADER, null);
+  private final SparkMax follower = new SparkMax(BACK_FOLLOWER, null);
 
-    follower.setControl(new Follower(FRONT_LEADER, MotorAlignmentValue.Aligned));
+  public RealElevator(){
+    SparkMaxConfig config = new SparkMaxConfig(); 
+    config.idleMode(IdleMode.kBrake);
+    config.smartCurrentLimit((int) Math.round(CURRENT_LIMIT.in(Amps)));
 
-    talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    talonConfig.Feedback.SensorToMechanismRatio = CONVERSION_FACTOR;
-    talonConfig.CurrentLimits.SupplyCurrentLimit = CURRENT_LIMIT.in(Amps);
+    config.encoder.positionConversionFactor(1.0 / CONVERSION_FACTOR);
+    config.encoder.velocityConversionFactor((1.0 / CONVERSION_FACTOR)/60);
 
-    leader.getConfigurator().apply(talonConfig);
-    follower.getConfigurator().apply(talonConfig);
+    SparkMaxConfig leaderConfig = new SparkMaxConfig();
+    leaderConfig.apply(config);
+    
+    SparkMaxConfig followerConfig = new SparkMaxConfig();
+    followerConfig.apply(config);
+    followerConfig.follow(leader);
 
-    leader.setPosition(0);
-    follower.setPosition(0);
+    leader.getEncoder().setPosition(0);
+    follower.getEncoder().setPosition(0);
 
-    TalonUtils.addMotor(leader);
-    TalonUtils.addMotor(follower);
-    register(leader);
-    register(follower);
+    
   }
 
   @Override
@@ -45,17 +41,17 @@ public class RealElevator implements ElevatorIO {
 
   @Override
   public double position() {
-    return leader.getPosition().getValueAsDouble();
+    return leader.getEncoder().getPosition();
   }
 
   @Override
   public double velocity() {
-    return leader.getVelocity().getValueAsDouble();
+    return leader.getEncoder().getVelocity();
   }
 
   @Override
   public void resetPosition() {
-    leader.setPosition(0);
+    leader.getEncoder().setPosition(0);
   }
 
   @Override
