@@ -7,7 +7,6 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import java.util.function.DoubleConsumer;
 
 /**
@@ -52,10 +51,8 @@ public class SimpleMotor {
 
   public static SimpleMotor spark(SparkMax motor, SparkMaxConfig config) {
     FaultLogger.register(motor);
-    motor.configure(config, 
-      ResetMode.kResetSafeParameters,
-      PersistMode.kPersistParameters);
-      return new SimpleMotor(motor::set, motor::setVoltage, motor::close);
+    motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    return new SimpleMotor(motor::set, motor::setVoltage, motor::close);
   }
 
   /** Returns a new {@link SimpleMotor} that does absolutely nothing. */
