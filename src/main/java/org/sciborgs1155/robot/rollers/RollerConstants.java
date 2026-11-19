@@ -10,4 +10,6 @@ public class RollerConstants {
 
   public static final double ROLLER_POWER = 0.5;
   public static final double GEARING = 2;
+
+  private RollerConstants() {}
 }
