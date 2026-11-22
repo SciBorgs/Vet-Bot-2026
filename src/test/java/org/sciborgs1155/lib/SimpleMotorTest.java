@@ -10,28 +10,28 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.junit.jupiter.api.Test;
 
-public class SimpleMotorTest {
+final class SimpleMotorTest {
   @Test
-  public void test() throws Exception {
+  void test() throws Exception {
     setupTests();
     DCMotorSim motor =
         new DCMotorSim(LinearSystemId.createDCMotorSystem(1, 0.3), DCMotor.getKrakenX60(1));
 
-    assert motor.getAngularAcceleration().in(RadiansPerSecondPerSecond) == 0;
+    assertEquals(0, motor.getAngularAcceleration().in(RadiansPerSecondPerSecond));
 
     SimpleMotor sm = new SimpleMotor(motor::setInput, motor::setInputVoltage, () -> {});
     run(Commands.run(() -> motor.update(0.02)));
 
     sm.set(0.5);
-    assertEquals(motor.getInput().get(0, 0), 0.5);
+    assertEquals(0.5, motor.getInput().get(0, 0));
 
     fastForward();
-    assertEquals(motor.getAngularVelocityRadPerSec(), 0.5, 2e-3);
+    assertEquals(0.5, motor.getAngularVelocityRadPerSec(), 2e-3);
 
     sm.set(-0.5);
 
     fastForward();
-    assertEquals(motor.getAngularVelocityRadPerSec(), -0.5, 2e-3);
+    assertEquals(-0.5, motor.getAngularVelocityRadPerSec(), 2e-3);
 
     reset();
   }

@@ -26,7 +26,11 @@ public final class Ports {
   public static final class OI {
     public static final int OPERATOR = 0;
     public static final int DRIVER = 1;
+
+    private OI() {}
   }
+
+  private Ports() {}
 
   public static final class Drive {
     public static final int GYRO = 20;
@@ -54,6 +58,8 @@ public final class Ports {
   }
 
   public static final class LEDs {
-    public static final int LED_PORT = 10;
+    public static final int LED_PORT = 9;
+
+    private LEDs() {}
   }
 }
