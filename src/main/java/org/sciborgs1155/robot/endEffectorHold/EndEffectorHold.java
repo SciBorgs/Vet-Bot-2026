@@ -1,11 +1,10 @@
-package org.sciborgs1155.robot.endEffectorHold;
+package org.sciborgs1155.robot.endeffectorhold;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Radians;
 import static org.sciborgs1155.robot.Ports.EndEffector.*;
-import static org.sciborgs1155.robot.endEffectorHold.EndEffectorHoldConstants.*;
+import static org.sciborgs1155.robot.endeffectorhold.EndEffectorHoldConstants.*;
 
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -23,18 +22,20 @@ public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
       new ProfiledPIDController(kP, kI, kP, new Constraints(MAX_VELOCITY, MAX_ACCEL));
   private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(kS, kV, kA);
 
+  /** Instantiates the hardware */
   public EndEffectorHold(SimpleMotor hardware) {
     this.hardware = hardware;
     pid.setTolerance(POSITION_TOLERANCE.in(Radians));
     setDefaultCommand(stop());
   }
 
+  /** creates a new hold if the robot is real */
   public static EndEffectorHold create() {
     return Robot.isReal() ? new EndEffectorHold(realMotor()) : none();
   }
 
   private static SimpleMotor realMotor() {
-    final MotorType motorType = MotorType.kBrushless;
+    // final MotorType motorType = MotorType.kBrushless;
     final SparkMax motor = new SparkMax(MOTOR_PIVOT, null);
     SparkMaxConfig config = new SparkMaxConfig();
     config.smartCurrentLimit((int) CURRENT_LIMIT.in(Amps));
@@ -45,22 +46,27 @@ public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
     return SimpleMotor.spark(motor, config);
   }
 
+  /** makes no end effector */
   public static EndEffectorHold none() {
     return new EndEffectorHold(SimpleMotor.none());
   }
 
+  /** intakes a ball */
   public Command in(double voltage) {
     return run(() -> hardware.set(voltage));
   }
 
+  /** outtakes */
   public Command out(double voltage) {
     return run(() -> hardware.set(-voltage));
   }
 
+  /** stops it from turning */
   public Command stop() {
     return in(0);
   }
 
+  /** closes it */
   @Override
   public void close() throws Exception {
     hardware.close();

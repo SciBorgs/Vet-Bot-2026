@@ -49,6 +49,7 @@ public class SimpleMotor {
     return new SimpleMotor(motor::set, motor::setVoltage, motor::close);
   }
 
+  /** same as above, just uses a sparkmax instead of a talon */
   public static SimpleMotor spark(SparkMax motor, SparkMaxConfig config) {
     FaultLogger.register(motor);
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

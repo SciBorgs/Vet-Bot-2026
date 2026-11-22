@@ -49,12 +49,16 @@ public final class Ports {
     public static final int REAR_LEFT_CANCODER = 7;
     public static final int FRONT_RIGHT_CANCODER = 6;
     public static final int REAR_RIGHT_CANCODER = 8;
+
+    private Drive() {}
   }
 
   public static final class EndEffector {
     public static final int MOTOR_CLAW = 8; // TODO: Change all 3
     public static final int MOTOR_PIVOT = 9;
     public static final int ENCODER = 52;
+
+    private EndEffector() {}
   }
 
   public static final class LEDs {

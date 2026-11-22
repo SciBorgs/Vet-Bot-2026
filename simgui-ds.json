@@ -40,7 +40,7 @@
       "axisCount": 6,
       "buttonCount": 4,
       "buttonKeys": [
-        90,
+        265,
         88,
         67,
         86
@@ -83,7 +83,6 @@
           "incKey": 262
         },
         {
-          "decKey": 265,
           "incKey": 264
         }
       ],

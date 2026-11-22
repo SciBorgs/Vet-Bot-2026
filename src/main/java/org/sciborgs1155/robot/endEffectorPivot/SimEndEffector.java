@@ -1,16 +1,16 @@
-package org.sciborgs1155.robot.endEffectorPivot;
+package org.sciborgs1155.robot.endeffectorpivot;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Seconds;
 import static org.sciborgs1155.robot.Constants.PERIOD;
-import static org.sciborgs1155.robot.endEffectorPivot.EndEffectorPivotConstants.*;
+import static org.sciborgs1155.robot.endeffectorpivot.EndEffectorPivotConstants.*;
 
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
 public class SimEndEffector implements EndEffectorIO {
   private final SingleJointedArmSim sim =
       new SingleJointedArmSim(
-          GEARBOX, GEARING, MOI, LENGTH.in(Meters), MIN_ANGLE, MAX_ANGLE, true, START_ANGLE, 0.01);
+          GEARBOX, GEARING, MOI, LENGTH.in(Meters), MIN_ANGLE, MAX_ANGLE, true, START_ANGLE);
 
   @Override
   public void setVoltage(double voltage) {

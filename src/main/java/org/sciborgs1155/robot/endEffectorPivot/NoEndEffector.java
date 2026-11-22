@@ -1,4 +1,4 @@
-package org.sciborgs1155.robot.endEffectorPivot;
+package org.sciborgs1155.robot.endeffectorpivot;
 
 public class NoEndEffector implements EndEffectorIO {
 

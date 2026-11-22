@@ -39,8 +39,8 @@ import org.sciborgs1155.robot.Ports.OI;
 import org.sciborgs1155.robot.commands.Alignment;
 import org.sciborgs1155.robot.commands.Autos;
 import org.sciborgs1155.robot.drive.Drive;
-import org.sciborgs1155.robot.endEffectorHold.EndEffectorHold;
-import org.sciborgs1155.robot.endEffectorPivot.EndEffectorPivot;
+import org.sciborgs1155.robot.endeffectorhold.EndEffectorHold;
+import org.sciborgs1155.robot.endeffectorpivot.EndEffectorPivot;
 import org.sciborgs1155.robot.vision.Vision;
 
 /**
