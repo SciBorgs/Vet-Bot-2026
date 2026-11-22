@@ -42,7 +42,7 @@ public final class EndEffectorPivotConstants {
 
   public static final double START_ANGLE = 0;
 
-  public static final double MAX_ANGLE = 180;
+  public static final double MAX_ANGLE = Math.PI;
   public static final double MIN_ANGLE = 0;
 
   public static final double SCORE_ANGLE = 0;
