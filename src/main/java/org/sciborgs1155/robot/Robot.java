@@ -39,6 +39,7 @@ import org.sciborgs1155.robot.Ports.OI;
 import org.sciborgs1155.robot.commands.Alignment;
 import org.sciborgs1155.robot.commands.Autos;
 import org.sciborgs1155.robot.drive.Drive;
+import org.sciborgs1155.robot.endEffectorHold.EndEffectorHold;
 import org.sciborgs1155.robot.endEffectorPivot.EndEffectorPivot;
 import org.sciborgs1155.robot.vision.Vision;
 
@@ -60,6 +61,7 @@ public class Robot extends CommandRobot {
   private final Drive drive = Drive.create();
   private final Vision vision = Vision.create();
   private final EndEffectorPivot endEffectorPivot = EndEffectorPivot.create();
+  private final EndEffectorHold endEffectorHold = EndEffectorHold.create();
 
   // COMMANDS
   private final Alignment align = new Alignment(drive);
@@ -200,7 +202,7 @@ public class Robot extends CommandRobot {
     // TODO: Add any additional bindings.
     driver.povUp().onTrue(endEffectorPivot.turn(2));
     driver.povDown().onTrue(endEffectorPivot.turn(-2));
-    driver.a().onTrue(Commands.run(() -> endEffectorPivot.turn(5)));
+    driver.a().onTrue(endEffectorHold.in(1.5));
   }
 
   /**
