@@ -22,22 +22,6 @@ import java.util.List;
  * current robot configuration!
  */
 public final class DriveConstants {
-  /** The type of control loop to use when controlling a module's drive motor. */
-  public static enum ControlMode {
-    CLOSED_LOOP_VELOCITY,
-    OPEN_LOOP_VELOCITY;
-  }
-
-  public record PIDConstants(double kP, double kI, double kD) {}
-
-  public static record FFConstants(double kS, double kV, double kA) {}
-
-  /** The type of modules being used. */
-  public static enum ModuleType {
-    TALON, // Kraken X60 Drive, Kraken X60 Turn
-    SPARK; // NEO Vortex Drive, NEO 550 Turn
-  }
-
   // TODO: Change central drivetrain constants as needed.
 
   // The type of module on the chassis
@@ -96,6 +80,22 @@ public final class DriveConstants {
 
   public static final Rotation3d GYRO_OFFSET = new Rotation3d(0, 0, PI);
 
+  /** The type of control loop to use when controlling a module's drive motor. */
+  public enum ControlMode {
+    CLOSED_LOOP_VELOCITY,
+    OPEN_LOOP_VELOCITY;
+  }
+
+  public record PIDConstants(double kP, double kI, double kD) {}
+
+  public record FFConstants(double kS, double kV, double kA) {}
+
+  /** The type of modules being used. */
+  public enum ModuleType {
+    TALON, // Kraken X60 Drive, Kraken X60 Turn
+    SPARK; // NEO Vortex Drive, NEO 550 Turn
+  }
+
   public static final class Assisted {
     // The angle between the velocity and the displacement from a target, above which the robot will
     // not use assisted driving to the target. (the driver must be driving in the general direction
@@ -105,11 +105,15 @@ public final class DriveConstants {
     // The input of the joystick beyond which the assisted driving will not control the rotation of
     // the swerve.
     public static final double ROTATING_THRESHOLD = 0.02;
+
+    private Assisted() {}
   }
 
   public static final class Skid {
     // TODO: find a value (3 is currently random, should change)
     public static final LinearVelocity THRESHOLD = MetersPerSecond.of(3);
+
+    private Skid() {}
   }
 
   // TODO: Change ALL characterization constants for each unique robot as needed.
@@ -119,6 +123,8 @@ public final class DriveConstants {
     public static final double D = 0.05;
 
     public static final Distance TOLERANCE = Centimeters.of(1);
+
+    private Translation() {}
   }
 
   public static final class Rotation {
@@ -127,10 +133,14 @@ public final class DriveConstants {
     public static final double D = 0.05;
 
     public static final Angle TOLERANCE = Degrees.of(2);
+
+    private Rotation() {}
   }
 
   public static final class ModuleConstants {
     public static final double COUPLING_RATIO = 0;
+
+    private ModuleConstants() {}
 
     public static final class Driving {
       public static final Distance CIRCUMFERENCE = WHEEL_RADIUS.times(2 * PI);
@@ -146,12 +156,6 @@ public final class DriveConstants {
 
       public static final Current CURRENT_LIMIT = Amps.of(80);
 
-      public static final class PID {
-        public static final double P = 3.2;
-        public static final double I = 0.0;
-        public static final double D = 0.0;
-      }
-
       public static final FFConstants FRONT_RIGHT_FF = new FFConstants(0.18984, 2.5193, 0.22823);
       public static final FFConstants FRONT_LEFT_FF = new FFConstants(0.19491, 2.2614, 0.041899);
       public static final FFConstants REAR_LEFT_FF = new FFConstants(0.08037, 2.2685, 0.22776);
@@ -159,6 +163,16 @@ public final class DriveConstants {
 
       public static final List<FFConstants> FF_CONSTANTS =
           List.of(FRONT_LEFT_FF, FRONT_RIGHT_FF, REAR_LEFT_FF, REAR_RIGHT_FF);
+
+      public static final class PID {
+        public static final double P = 3.2;
+        public static final double I = 0.0;
+        public static final double D = 0.0;
+
+        private PID() {}
+      }
+
+      private Driving() {}
     }
 
     public static final class Turning {
@@ -198,6 +212,10 @@ public final class DriveConstants {
           List.of(FRONT_LEFT_FF, FRONT_RIGHT_FF, REAR_LEFT_FF, REAR_RIGHT_FF);
 
       public static final FFConstants SIM = new FFConstants(0.30817, 0.55, 0.03);
+
+      private Turning() {}
     }
   }
+
+  private DriveConstants() {}
 }
