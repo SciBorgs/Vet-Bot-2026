@@ -53,6 +53,14 @@ public final class Ports {
     private Drive() {}
   }
 
+  public static final class EndEffector {
+    public static final int MOTOR_CLAW = 8; // TODO: Change all 3
+    public static final int MOTOR_PIVOT = 9;
+    public static final int ENCODER = 52;
+
+    private EndEffector() {}
+  }
+
   public static final class LEDs {
     public static final int LED_PORT = 9;
 
