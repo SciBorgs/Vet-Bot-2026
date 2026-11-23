@@ -4,13 +4,6 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static org.sciborgs1155.robot.elevator.ElevatorConstants.*;
-import static org.sciborgs1155.robot.elevator.ElevatorConstants.HOMING_VOLTAGE;
-import static org.sciborgs1155.robot.elevator.ElevatorConstants.KA;
-import static org.sciborgs1155.robot.elevator.ElevatorConstants.MAX_ACCEL;
-import static org.sciborgs1155.robot.elevator.ElevatorConstants.MAX_HEIGHT;
-import static org.sciborgs1155.robot.elevator.ElevatorConstants.MAX_VELOCITY;
-import static org.sciborgs1155.robot.elevator.ElevatorConstants.MIN_HEIGHT;
-import static org.sciborgs1155.robot.elevator.ElevatorConstants.VELOCITY_TOLERANCE;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
@@ -66,6 +59,20 @@ public final class Elevator extends SubsystemBase implements AutoCloseable {
   /** returns velocity */
   public double velocity() {
     return hardware.velocity();
+  }
+
+  /**
+   * @return current position in meters
+   */
+  public double position() {
+    return hardware.position();
+  }
+
+  /**
+   * @return setpoint(goal) pos in meters
+   */
+  public double setpoint() {
+    return pid.getSetpoint().position;
   }
 
   /** returns whether the elevator is at desired point / desired amount of extension */
