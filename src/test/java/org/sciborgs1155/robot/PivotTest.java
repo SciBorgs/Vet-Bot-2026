@@ -16,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.sciborgs1155.robot.pivot.Pivot;
 
-public class PivotTest {
+class PivotTest {
   private Pivot pivot;
   private final Random random = new Random();
 
@@ -32,13 +32,13 @@ public class PivotTest {
    * @throws Exception
    */
   @AfterEach
-  public void destroy() throws Exception {
+  private void destroy() throws Exception {
     reset(pivot);
   }
 
   /** Tests to see if the intake pivot works as normal. */
   @Test
-  public void orientation() {
+  void orientation() {
     double setpoint = random.nextDouble(MIN_ANGLE.in(Radians), MAX_ANGLE.in(Radians));
     CommandScheduler.getInstance()
         .schedule(pivot.goTo(setpoint).withDeadline(Commands.waitSeconds(7)));

@@ -23,7 +23,7 @@ import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
 import org.sciborgs1155.robot.Robot;
 
-public class PivotConstants {
+public final class PivotConstants {
   public static final Current CURRENT_LIMIT = Amps.of(30);
 
   public static final double P = Robot.isReal() ? 6 : 10;
@@ -63,8 +63,6 @@ public class PivotConstants {
   public static final double SQUEEZE_VOLTS = 2.0;
   public static final double STALLING_CURRENT = 40.0;
 
-  /**
-   * A dummy constructor for safety reasons.
-   */
-  public PivotConstants() {}
+  /** A dummy constructor for safety reasons. */
+  private PivotConstants() {}
 }

@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Radians;
 import static org.sciborgs1155.robot.Ports.Pivot.*;
 import static org.sciborgs1155.robot.pivot.PivotConstants.*;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -19,15 +18,13 @@ public class RealPivot implements PivotIO {
   private final SparkMax motor;
   private final CANcoder encoder;
 
-  /**
-   * Returns a new RealPivot object.
-   */
+  /** Returns a new RealPivot object. */
   public RealPivot() {
     motor = new SparkMax(MOTOR, MotorType.kBrushless);
     encoder = new CANcoder(ENCODER);
 
     SparkMaxConfig motorConfig = new SparkMaxConfig();
-    CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
+    // CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
 
     motorConfig.smartCurrentLimit((int) CURRENT_LIMIT.in(Amps));
     motorConfig.idleMode(IdleMode.kBrake);

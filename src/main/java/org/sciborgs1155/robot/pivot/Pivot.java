@@ -73,6 +73,7 @@ public class Pivot extends SubsystemBase implements AutoCloseable {
 
   /**
    * Returns the current position of the pivot in radians.
+   *
    * @return the current position in radians
    */
   public double position() {
@@ -95,6 +96,7 @@ public class Pivot extends SubsystemBase implements AutoCloseable {
 
   /**
    * Computes the voltage to apply to the pivot motor to move to the given angle.
+   *
    * @param angle the angle to move to in radians
    */
   public void update(double angle) {
@@ -106,6 +108,7 @@ public class Pivot extends SubsystemBase implements AutoCloseable {
 
   /**
    * A command factory to go to a given angle.
+   *
    * @param angle the angle to move to in radians.
    * @return a run command to move the pivot to the given angle.
    */
