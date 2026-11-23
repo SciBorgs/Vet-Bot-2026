@@ -58,4 +58,11 @@ public final class Ports {
 
     private LEDs() {}
   }
+
+  public static final class Pivot {
+    public static final int MOTOR = 0;
+    public static final int ENCODER = 1;
+
+    private Pivot() {}
+  }
 }
