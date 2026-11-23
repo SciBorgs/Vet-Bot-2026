@@ -1,6 +1,8 @@
 package org.sciborgs1155.robot;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.math.geometry.Rotation2d;

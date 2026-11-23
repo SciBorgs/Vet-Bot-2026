@@ -53,6 +53,13 @@ public final class Ports {
     private Drive() {}
   }
 
+  public static final class Roller {
+    public static final int LEFT_MOTOR = 21;
+    public static final int RIGHT_MOTOR = 5;
+
+    private Roller() {}
+  }
+
   public static final class LEDs {
     public static final int LED_PORT = 9;
 
