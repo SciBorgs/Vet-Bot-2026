@@ -200,8 +200,9 @@ public class Robot extends CommandRobot {
         .onFalse(Commands.runOnce(() -> speedMultiplier = Constants.FULL_SPEED_MULTIPLIER));
 
     // TODO: Add any additional bindings.
-    driver.a().onTrue(endEffectorPivot.turn(10));
+    driver.a().onTrue(endEffectorPivot.turn(2));
     driver.x().onTrue(endEffectorPivot.turn(-2));
+    driver.y().onTrue(endEffectorPivot.goTo(Math.PI));
     driver.a().onTrue(endEffectorHold.in());
   }
 

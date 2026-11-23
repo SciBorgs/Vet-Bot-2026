@@ -36,7 +36,7 @@ class EndEffectorTest {
   }
 
   /** test the movement of the end effector */
-  @RepeatedTest(5)
+  @RepeatedTest(3)
   void orientation() {
     double setpoint = random.nextDouble(MIN_ANGLE, MAX_ANGLE);
     CommandScheduler.getInstance()

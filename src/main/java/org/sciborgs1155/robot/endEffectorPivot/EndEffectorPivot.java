@@ -21,7 +21,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
+import org.sciborgs1155.lib.LoggingUtils;
 import org.sciborgs1155.lib.Tuning;
 import org.sciborgs1155.robot.Robot;
 
@@ -87,7 +89,7 @@ public class EndEffectorPivot extends SubsystemBase implements AutoCloseable {
         "Robot/endeffector/dynamic backward",
         sysIdRoutine.dynamic(Direction.kReverse).withName("endeffector dynamic backward"));
 
-    setDefaultCommand(stop());
+    setDefaultCommand(turn(0));
   }
 
   /**
@@ -109,7 +111,7 @@ public class EndEffectorPivot extends SubsystemBase implements AutoCloseable {
    * @return set voltage of end effector
    */
   public Command turn(double voltage) {
-    return run(() -> hardware.setVoltage(voltage));
+    return runOnce(() -> hardware.setVoltage(voltage));
   }
 
   /**
@@ -219,6 +221,9 @@ public class EndEffectorPivot extends SubsystemBase implements AutoCloseable {
       ff.setKv(tuningV.get());
       ff.setKs(tuningS.get());
     }
+    LoggingUtils.log(
+        "/Robot/Pivot/command",
+        Optional.ofNullable(getCurrentCommand()).map(Command::getName).orElse("none"));
   }
 
   @Override
