@@ -62,4 +62,6 @@ public class PivotConstants {
   public static final Angle SQUEEZE_EXTEND = Degrees.of(60);
   public static final double SQUEEZE_VOLTS = 2.0;
   public static final double STALLING_CURRENT = 40.0;
+
+  public PivotConstants() {}
 }

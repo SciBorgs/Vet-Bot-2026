@@ -26,11 +26,17 @@ public class PivotTest {
     setupTests();
   }
 
+  /**
+   * Resets the pivot object.
+   *
+   * @throws Exception
+   */
   @AfterEach
   public void destroy() throws Exception {
     reset(pivot);
   }
 
+  /** Tests to see if the intake pivot works as normal. */
   @Test
   public void orientation() {
     double setpoint = random.nextDouble(MIN_ANGLE.in(Radians), MAX_ANGLE.in(Radians));
