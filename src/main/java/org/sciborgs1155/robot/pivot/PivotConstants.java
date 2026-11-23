@@ -63,5 +63,8 @@ public class PivotConstants {
   public static final double SQUEEZE_VOLTS = 2.0;
   public static final double STALLING_CURRENT = 40.0;
 
+  /**
+   * A dummy constructor for safety reasons.
+   */
   public PivotConstants() {}
 }

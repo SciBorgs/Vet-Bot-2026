@@ -19,6 +19,9 @@ public class RealPivot implements PivotIO {
   private final SparkMax motor;
   private final CANcoder encoder;
 
+  /**
+   * Returns a new RealPivot object.
+   */
   public RealPivot() {
     motor = new SparkMax(MOTOR, MotorType.kBrushless);
     encoder = new CANcoder(ENCODER);

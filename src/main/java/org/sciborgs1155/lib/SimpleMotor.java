@@ -49,6 +49,12 @@ public class SimpleMotor {
     return new SimpleMotor(motor::set, motor::setVoltage, motor::close);
   }
 
+  /**
+   * @return Returns a new {@link SimpleMotor} that controls a {@link SparkMax} motor. The motor is
+   *     registered with {@link FaultLogger}.
+   * @param motor : {@link SparkMax} controller instance with device ID.
+   * @param config : {@link SparkMaxConfig} to apply to the motor.
+   */
   public static SimpleMotor spark(SparkMax motor, SparkMaxConfig config) {
     FaultLogger.register(motor);
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

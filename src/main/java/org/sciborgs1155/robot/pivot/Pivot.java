@@ -24,6 +24,11 @@ public class Pivot extends SubsystemBase implements AutoCloseable {
   private final ProfiledPIDController pid = new ProfiledPIDController(P, I, D, CONSTRAINTS);
   private final ArmFeedforward ff = new ArmFeedforward(S, G, V, A);
 
+  /**
+   * Creates a new Pivot subsystem.
+   *
+   * @param hardware the hardware implementationg of the Pivot subsystem
+   */
   public Pivot(PivotIO hardware) {
     this.hardware = hardware;
 
@@ -66,18 +71,32 @@ public class Pivot extends SubsystemBase implements AutoCloseable {
     setDefaultCommand(run(() -> hardware.setVoltage(0)));
   }
 
+  /**
+   * Returns the current position of the pivot in radians.
+   * @return the current position in radians
+   */
   public double position() {
     return hardware.position();
   }
 
+  /**
+   * @return a new Pivot subsystem with real motors
+   */
   public static Pivot create() {
     return new Pivot(Robot.isReal() ? new RealPivot() : new SimPivot());
   }
 
+  /**
+   * @return a new Pivot subsystem with no motors
+   */
   public static Pivot none() {
     return new Pivot(new NoPivot());
   }
 
+  /**
+   * Computes the voltage to apply to the pivot motor to move to the given angle.
+   * @param angle the angle to move to in radians
+   */
   public void update(double angle) {
     double rads = MathUtil.clamp(angle, MIN_ANGLE.in(Radians), MAX_ANGLE.in(Radians));
     double pidVoltage = pid.calculate(hardware.position(), rads);
@@ -85,14 +104,25 @@ public class Pivot extends SubsystemBase implements AutoCloseable {
     hardware.setVoltage(pidVoltage + ffVoltage);
   }
 
+  /**
+   * A command factory to go to a given angle.
+   * @param angle the angle to move to in radians.
+   * @return a run command to move the pivot to the given angle.
+   */
   public Command goTo(double angle) {
     return run(() -> update(angle));
   }
 
+  /**
+   * @return Returns a command to extend the pivot to max angle.
+   */
   public Command extend() {
     return goTo(MAX_ANGLE.in(Radians));
   }
 
+  /**
+   * @return Returns a command to retract the pivot to min angle.
+   */
   public Command retract() {
     return goTo(MIN_ANGLE.in(Radians));
   }
