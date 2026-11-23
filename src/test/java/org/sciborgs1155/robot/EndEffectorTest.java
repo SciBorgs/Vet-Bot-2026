@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import java.util.Random;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.RepeatedTest;
 import org.sciborgs1155.robot.endeffectorpivot.EndEffectorPivot;
 
 class EndEffectorTest {
@@ -36,7 +36,7 @@ class EndEffectorTest {
   }
 
   /** test the movement of the end effector */
-  @Test
+  @RepeatedTest(5)
   void orientation() {
     double setpoint = random.nextDouble(MIN_ANGLE, MAX_ANGLE);
     CommandScheduler.getInstance()

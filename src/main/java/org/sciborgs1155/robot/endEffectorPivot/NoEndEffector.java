@@ -7,17 +7,17 @@ public class NoEndEffector implements EndEffectorIO {
 
   @Override
   public double position() {
-    return position();
+    return 0;
   }
 
   @Override
   public double velocity() {
-    return velocity();
+    return 0;
   }
 
   @Override
   public double current() {
-    return current();
+    return 0;
   }
 
   @Override

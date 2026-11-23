@@ -32,6 +32,8 @@ public final class EndEffectorHoldConstants {
   public static final double MAX_VELOCITY = 20;
   public static final double MAX_ACCEL = 20;
 
+  public static final double INTAKING_VOLTAGE = 1.1;
+
   public static final Angle POSITION_TOLERANCE = Radians.of(10);
 
   private EndEffectorHoldConstants() {}

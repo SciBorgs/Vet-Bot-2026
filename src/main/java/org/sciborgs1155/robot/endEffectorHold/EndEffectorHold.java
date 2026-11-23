@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static org.sciborgs1155.robot.Ports.EndEffector.*;
 import static org.sciborgs1155.robot.endeffectorhold.EndEffectorHoldConstants.*;
 
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -35,8 +36,8 @@ public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
   }
 
   private static SimpleMotor realMotor() {
-    // final MotorType motorType = MotorType.kBrushless;
-    final SparkMax motor = new SparkMax(MOTOR_PIVOT, null);
+    final MotorType motorType = MotorType.kBrushless;
+    final SparkMax motor = new SparkMax(MOTOR_PIVOT, motorType);
     SparkMaxConfig config = new SparkMaxConfig();
     config.smartCurrentLimit((int) CURRENT_LIMIT.in(Amps));
     config.idleMode(IdleMode.kBrake);
@@ -52,18 +53,18 @@ public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
   }
 
   /** intakes a ball */
-  public Command in(double voltage) {
-    return run(() -> hardware.set(voltage));
+  public Command in() {
+    return run(() -> hardware.set(INTAKING_VOLTAGE));
   }
 
   /** outtakes */
-  public Command out(double voltage) {
-    return run(() -> hardware.set(-voltage));
+  public Command out() {
+    return run(() -> hardware.set(-INTAKING_VOLTAGE));
   }
 
   /** stops it from turning */
   public Command stop() {
-    return in(0);
+    return run(() -> hardware.set(0));
   }
 
   /** closes it */

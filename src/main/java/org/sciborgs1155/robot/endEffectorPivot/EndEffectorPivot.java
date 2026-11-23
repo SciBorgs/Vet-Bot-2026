@@ -1,23 +1,60 @@
 package org.sciborgs1155.robot.endeffectorpivot;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.Volts;
 import static org.sciborgs1155.robot.Ports.EndEffector.*;
 import static org.sciborgs1155.robot.endeffectorpivot.EndEffectorPivotConstants.*;
 
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.epilogue.NotLogged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import java.util.function.DoubleSupplier;
+import org.sciborgs1155.lib.Tuning;
 import org.sciborgs1155.robot.Robot;
 
 public class EndEffectorPivot extends SubsystemBase implements AutoCloseable {
   private final EndEffectorIO hardware;
   private final ProfiledPIDController pid =
-      new ProfiledPIDController(kP, kI, kP, new Constraints(MAX_VELOCITY, MAX_ACCEL));
+      new ProfiledPIDController(
+          kP, kI, kP, new Constraints(MAX_VELOCITY.in(MetersPerSecond), MAX_ACCEL));
+
+  @NotLogged
+  private final DoubleEntry tuningP = Tuning.entry("Robot/tuning/endeffector/tuningP", kP);
+
+  @NotLogged
+  private final DoubleEntry tuningI = Tuning.entry("Robot/tuning/endeffector/tuningI", kI);
+
+  @NotLogged
+  private final DoubleEntry tuningD = Tuning.entry("Robot/tuning/endeffector/tuningD", kD);
+
+  @NotLogged
+  private final DoubleEntry tuningS = Tuning.entry("Robot/tuning/endeffector/tuningS", kS);
+
+  @NotLogged
+  private final DoubleEntry tuningG = Tuning.entry("Robot/tuning/endeffector/tuningG", kG);
+
+  @NotLogged
+  private final DoubleEntry tuningV = Tuning.entry("Robot/tuning/endeffector/tuningV", kV);
+
+  @NotLogged
+  private final DoubleEntry tuningA = Tuning.entry("Robot/tuning/endeffector/tuningA", kA);
+
+  /** Routine for recording and analyzing motor data. */
+  private final SysIdRoutine sysIdRoutine;
+
   private final ArmFeedforward ff = new ArmFeedforward(kS, kG, kV, kA);
 
   /**
@@ -28,6 +65,28 @@ public class EndEffectorPivot extends SubsystemBase implements AutoCloseable {
     pid.setTolerance(POSITION_TOLERANCE.in(Radians));
     pid.reset(hardware.position());
     pid.setGoal(START_ANGLE);
+
+    sysIdRoutine =
+        new SysIdRoutine(
+            new Config(
+                RAMP_RATE,
+                STEP_VOLTAGE,
+                TIME_OUT,
+                (state) -> SignalLogger.writeString("slapdown state", state.toString())),
+            new Mechanism(voltage -> hardware.setVoltage(voltage.in(Volts)), null, this));
+    SmartDashboard.putData(
+        "Robot/endeffector/quasistaic forward",
+        sysIdRoutine.quasistatic(Direction.kForward).withName("endeffector quasistaic forward"));
+    SmartDashboard.putData(
+        "Robot/endeffector/quasistaic backward",
+        sysIdRoutine.quasistatic(Direction.kReverse).withName("endeffector quasistaic backward"));
+    SmartDashboard.putData(
+        "Robot/endeffector/dynamic forward",
+        sysIdRoutine.dynamic(Direction.kForward).withName("endeffector dynamic forward"));
+    SmartDashboard.putData(
+        "Robot/endeffector/dynamic backward",
+        sysIdRoutine.dynamic(Direction.kReverse).withName("endeffector dynamic backward"));
+
     setDefaultCommand(stop());
   }
 
@@ -83,7 +142,7 @@ public class EndEffectorPivot extends SubsystemBase implements AutoCloseable {
    * @return go to a specific angle
    */
   public Command goTo(double angle) {
-    return run(() -> update(angle)); // .withName("go to angle"));
+    return run(() -> update(angle)).withName("go to angle");
   }
 
   /**
@@ -147,6 +206,19 @@ public class EndEffectorPivot extends SubsystemBase implements AutoCloseable {
   @Logged
   public boolean atGoal() {
     return pid.atGoal();
+  }
+
+  @Override
+  public void periodic() {
+    if (TUNING) {
+      pid.setP(tuningP.get());
+      pid.setI(tuningI.get());
+      pid.setD(tuningD.get());
+      ff.setKg(tuningG.get());
+      ff.setKa(tuningA.get());
+      ff.setKv(tuningV.get());
+      ff.setKs(tuningS.get());
+    }
   }
 
   @Override
