@@ -23,6 +23,7 @@ public final class Roller extends SubsystemBase implements AutoCloseable {
     this.right = right;
     setDefaultCommand(stop());
   }
+
   /**
    * @return Returns a new roller object based on {@link Robot#isReal()}
    */
@@ -31,8 +32,8 @@ public final class Roller extends SubsystemBase implements AutoCloseable {
   }
 
   /**
-   * @return Returns a SimpleMotor using {@link SimpleMotor#spark(SparkMax motor, SparkMaxConfig config)}
-   * 
+   * @return Returns a SimpleMotor using {@link SimpleMotor#spark(SparkMax motor, SparkMaxConfig
+   *     config)}
    * @param port - the ID number of the port.
    */
   private static SimpleMotor realMotor(int port) {
@@ -53,26 +54,31 @@ public final class Roller extends SubsystemBase implements AutoCloseable {
   }
 
   /**
-   * @return returns a command to 
+   * @return returns a command to stop the intake
    */
   public Command stop() {
     return spin(0);
   }
 
   /**
-   * @return make the motors spin to intake the fuel
+   * @return returns a command to spin inwards
    */
   public Command intake() {
     return spin(ROLLER_POWER);
   }
 
   /**
-   * @return make the motors spin outwards to outtake the fuel
+   * @return make the motors spin outwards
    */
   public Command outtake() {
     return spin(-ROLLER_POWER);
   }
 
+  /**
+   * @param power The voltage to set the motors to
+   * @return Returns a run command to set the lead motor to voltage power A command factory to set
+   *     the intake to spin at power
+   */
   public Command spin(double power) {
     return run(() -> left.set(power));
   }
