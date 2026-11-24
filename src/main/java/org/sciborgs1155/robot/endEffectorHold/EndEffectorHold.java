@@ -37,7 +37,7 @@ public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
 
   private static SimpleMotor realMotor() {
     final MotorType motorType = MotorType.kBrushless;
-    final SparkMax motor = new SparkMax(MOTOR_PIVOT, motorType);
+    final SparkMax motor = new SparkMax(MOTOR_CLAW, motorType);
     SparkMaxConfig config = new SparkMaxConfig();
     config.smartCurrentLimit((int) CURRENT_LIMIT.in(Amps));
     config.idleMode(IdleMode.kBrake);
@@ -54,12 +54,12 @@ public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
 
   /** intakes a ball */
   public Command in() {
-    return run(() -> hardware.set(INTAKING_VOLTAGE));
+    return run(() -> hardware.setVoltage(INTAKING_VOLTAGE));
   }
 
   /** outtakes */
   public Command out() {
-    return run(() -> hardware.set(-INTAKING_VOLTAGE));
+    return run(() -> hardware.setVoltage(-INTAKING_VOLTAGE));
   }
 
   /** stops it from turning */
