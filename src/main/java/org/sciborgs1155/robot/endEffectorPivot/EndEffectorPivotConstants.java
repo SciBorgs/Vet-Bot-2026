@@ -60,8 +60,6 @@ public final class EndEffectorPivotConstants {
   public static final double MAX_ANGLE = 2 * Math.PI;
   public static final double MIN_ANGLE = 0;
 
-  public static final double SCORE_ANGLE = 0;
-
   public static final DCMotor GEARBOX = DCMotor.getNeo550(1);
   public static final double MOI = 0.2135396026; // moment of inertia, change
   public static final Distance LENGTH = Inches.of(18.5); // change

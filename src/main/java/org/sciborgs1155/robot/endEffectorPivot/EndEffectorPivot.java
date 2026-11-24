@@ -156,13 +156,6 @@ public class EndEffectorPivot extends SubsystemBase implements AutoCloseable {
   }
 
   /**
-   * @return automate scoring
-   */
-  public Command score() {
-    return run(() -> goTo(SCORE_ANGLE));
-  }
-
-  /**
    * @return the position
    */
   @Logged
