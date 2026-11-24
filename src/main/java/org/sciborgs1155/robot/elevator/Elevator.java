@@ -82,7 +82,9 @@ public final class Elevator extends SubsystemBase implements AutoCloseable {
 
   /** commands motors to run until a certain height is met */
   public Command goTo(DoubleSupplier height) {
-    return run(() -> update(height.getAsDouble())).finallyDo(() -> hardware.setVoltage(0));
+    return runOnce(() -> pid.reset(hardware.position(), hardware.velocity()))
+        .andThen(run(() -> update(height.getAsDouble())))
+        .finallyDo(() -> hardware.setVoltage(0));
   }
 
   /** commands motors to go to set height */
