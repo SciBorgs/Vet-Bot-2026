@@ -1,12 +1,19 @@
 package org.sciborgs1155.robot;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.sciborgs1155.lib.UnitTestingUtil.fastForward;
 import static org.sciborgs1155.lib.UnitTestingUtil.reset;
 import static org.sciborgs1155.lib.UnitTestingUtil.setupTests;
+import static org.sciborgs1155.robot.commands.ScoringConstants.MIN_RELEASE_TIME;
+import static org.sciborgs1155.robot.commands.ScoringConstants.MIN_SCORE_HEIGHT;
 import static org.sciborgs1155.robot.commands.ScoringConstants.SCORE_HEIGHT;
+import static org.sciborgs1155.robot.commands.ScoringConstants.SETTLE_VELOCITY;
 import static org.sciborgs1155.robot.elevator.ElevatorConstants.MAX_HEIGHT;
 import static org.sciborgs1155.robot.elevator.ElevatorConstants.MIN_HEIGHT;
 
@@ -99,5 +106,64 @@ class ScoringTest {
       }
     }
     assertTrue(released, "rollers never released");
+  }
+
+  /**
+   * Runs the command to completion (or the tick cap) and returns how many ticks the rollers spun
+   * out.
+   */
+  private int runAndCountRelease(Command score) {
+    CommandScheduler.getInstance().schedule(score);
+    int releaseTicks = 0;
+    for (int i = 0; i < MAX_TICKS && score.isScheduled(); i++) {
+      fastForward(1);
+      if (holdVoltage < 0) releaseTicks++;
+    }
+    return releaseTicks;
+  }
+
+  @Test
+  void releasesOnlyWhenSettled() {
+    Command score = scoring.score();
+    CommandScheduler.getInstance().schedule(score);
+    double lastVoltage = 0;
+    for (int i = 0; i < MAX_TICKS && score.isScheduled(); i++) {
+      fastForward(1);
+      if (holdVoltage < 0 && lastVoltage >= 0) {
+        assertTrue(
+            Math.abs(elevator.velocity()) < SETTLE_VELOCITY.in(MetersPerSecond),
+            "released while moving at " + elevator.velocity());
+      }
+      lastVoltage = holdVoltage;
+    }
+  }
+
+  @Test
+  void givesUpIfHeightNeverReached() throws Exception {
+    Elevator stuck = Elevator.none(); // always reads 0 m
+    try {
+      Command score = new Scoring(stuck, hold).score();
+      int releaseTicks = runAndCountRelease(score);
+      assertFalse(score.isScheduled(), "score hung waiting for height");
+      assertEquals(0, releaseTicks, "released the ball off-height");
+    } finally {
+      stuck.close();
+    }
+  }
+
+  @Test
+  void heightIsFloored() {
+    double maxHeight = runAndTrackMax(scoring.score(Meters.of(0)));
+    assertTrue(
+        maxHeight > MIN_SCORE_HEIGHT.in(Meters) - HEIGHT_TOLERANCE, "only reached " + maxHeight);
+  }
+
+  @Test
+  void zeroReleaseTimeStillReleases() {
+    int releaseTicks =
+        runAndCountRelease(scoring.score(Meters.of(0.8), Seconds.of(0), Volts.of(3)));
+    assertTrue(
+        releaseTicks * 0.02 >= MIN_RELEASE_TIME.in(Seconds) - 1e-9,
+        "released for " + releaseTicks + " ticks");
   }
 }

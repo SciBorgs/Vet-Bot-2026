@@ -1,11 +1,16 @@
 package org.sciborgs1155.robot.commands;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
+import static org.sciborgs1155.robot.commands.ScoringConstants.MIN_RELEASE_TIME;
+import static org.sciborgs1155.robot.commands.ScoringConstants.MIN_SCORE_HEIGHT;
+import static org.sciborgs1155.robot.commands.ScoringConstants.RAISE_TIMEOUT;
 import static org.sciborgs1155.robot.commands.ScoringConstants.RELEASE_TIME;
 import static org.sciborgs1155.robot.commands.ScoringConstants.RELEASE_VOLTAGE;
 import static org.sciborgs1155.robot.commands.ScoringConstants.SCORE_HEIGHT;
+import static org.sciborgs1155.robot.commands.ScoringConstants.SETTLE_VELOCITY;
 import static org.sciborgs1155.robot.elevator.ElevatorConstants.MAX_HEIGHT;
 import static org.sciborgs1155.robot.elevator.ElevatorConstants.MIN_HEIGHT;
 
@@ -18,6 +23,7 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 import org.sciborgs1155.lib.Tuning;
 import org.sciborgs1155.robot.elevator.Elevator;
 import org.sciborgs1155.robot.endeffectorhold.EndEffectorHold;
@@ -78,23 +84,35 @@ public class Scoring {
   }
 
   /**
-   * Raises the elevator to {@code height}, spins the hold rollers out once it's there, then lowers
-   * the elevator. Ends on its own once the elevator is back down.
+   * Raises the elevator to {@code height}, spins the hold rollers out once the carriage has settled
+   * there, then lowers the elevator. If it doesn't settle within {@link
+   * ScoringConstants#RAISE_TIMEOUT}, it lowers without releasing. Ends on its own once the elevator
+   * is back down.
    *
-   * @param height Elevator height to release the ball at, clamped to the elevator's range.
-   * @param releaseTime How long to spin the rollers out.
+   * @param height Elevator height to release the ball at, clamped to [MIN_SCORE_HEIGHT,
+   *     MAX_HEIGHT].
+   * @param releaseTime How long to spin the rollers out, at least MIN_RELEASE_TIME.
    * @param releaseVoltage How hard to spin the rollers out.
    * @return The scoring command.
    */
   public Command score(Distance height, Time releaseTime, Voltage releaseVoltage) {
-    double goal = MathUtil.clamp(height.in(Meters), MIN_HEIGHT.in(Meters), MAX_HEIGHT.in(Meters));
+    double goal =
+        MathUtil.clamp(height.in(Meters), MIN_SCORE_HEIGHT.in(Meters), MAX_HEIGHT.in(Meters));
+    double releaseSeconds = Math.max(releaseTime.in(Seconds), MIN_RELEASE_TIME.in(Seconds));
     double bottom = MIN_HEIGHT.in(Meters);
+    BooleanSupplier settled =
+        () ->
+            elevator.atPosition(goal)
+                && Math.abs(elevator.velocity()) < SETTLE_VELOCITY.in(MetersPerSecond);
+
+    Command release = hold.out(releaseVoltage.in(Volts)).withTimeout(releaseSeconds);
 
     return elevator
         .goTo(goal)
         .withDeadline(
-            Commands.waitUntil(() -> elevator.atPosition(goal))
-                .andThen(hold.out(releaseVoltage.in(Volts)).withTimeout(releaseTime.in(Seconds))))
+            Commands.waitUntil(settled)
+                .withTimeout(RAISE_TIMEOUT.in(Seconds))
+                .andThen(Commands.either(release, Commands.none(), settled)))
         .andThen(
             elevator.retract().until(() -> elevator.atPosition(bottom)).deadlineFor(hold.stop()))
         .withName("score");
