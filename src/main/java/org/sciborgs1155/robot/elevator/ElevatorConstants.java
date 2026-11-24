@@ -37,7 +37,7 @@ public final class ElevatorConstants {
   public static final double HOMING_OUTPUT = -0.1;
 
   public static final LinearVelocity MAX_VELOCITY = MetersPerSecond.of(1);
-  public static final LinearAcceleration MAX_ACCEL = MetersPerSecondPerSecond.of(0);
+  public static final LinearAcceleration MAX_ACCEL = MetersPerSecondPerSecond.of(2); // TODO: tune
 
   public static final double HOMING_VOLTAGE = 0;
   public static final double VELOCITY_TOLERANCE = 0;
