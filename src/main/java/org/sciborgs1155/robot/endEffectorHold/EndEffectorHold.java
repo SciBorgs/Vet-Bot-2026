@@ -62,6 +62,14 @@ public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
     return run(() -> hardware.setVoltage(-INTAKING_VOLTAGE));
   }
 
+  /**
+   * @param volts how hard to spin the ball out (sign is ignored)
+   * @return outtakes at the given voltage
+   */
+  public Command out(double volts) {
+    return run(() -> hardware.setVoltage(-Math.abs(volts)));
+  }
+
   /** stops it from turning */
   public Command stop() {
     return run(() -> hardware.set(0));
