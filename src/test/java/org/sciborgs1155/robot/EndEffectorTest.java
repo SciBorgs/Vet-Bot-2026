@@ -23,8 +23,8 @@ class EndEffectorTest {
   /** set up tests and create the end effector */
   @BeforeEach
   private void setup() {
-    endEffector = EndEffectorPivot.create();
     setupTests();
+    endEffector = EndEffectorPivot.create();
   }
 
   /**
