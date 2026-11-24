@@ -22,7 +22,6 @@
           "incKey": 87
         },
         {
-          "decKey": 65,
           "incKey": 68
         },
         {
@@ -40,9 +39,9 @@
       "axisCount": 6,
       "buttonCount": 4,
       "buttonKeys": [
-        90,
+        65,
         88,
-        67,
+        89,
         86
       ],
       "povConfig": [
@@ -83,7 +82,6 @@
           "incKey": 262
         },
         {
-          "decKey": 265,
           "incKey": 264
         }
       ],
