@@ -30,7 +30,8 @@ public final class ElevatorConstants {
   public static final Distance MIN_HEIGHT = Meters.of(0);
   public static final Distance MAX_HEIGHT = Meters.of(1.5);
 
-  public static final double CONVERSION_FACTOR = GEARING / (2 * Math.PI * RADIUS.in(Meters)); // motor rotations per meter
+  public static final double CONVERSION_FACTOR =
+      GEARING / (2 * Math.PI * RADIUS.in(Meters)); // motor rotations per meter
 
   public static final Current CURRENT_LIMIT = Amps.of(60);
 
@@ -40,6 +41,7 @@ public final class ElevatorConstants {
   public static final double HOMING_VOLTAGE = -1.0; // TODO: tune
   public static final double VELOCITY_TOLERANCE = 0.01;
   public static final double DISTANCE_TOLERANCE = 0.5;
+  public static final Distance POSITION_TOLERANCE = Meters.of(0.02);
 
   private ElevatorConstants() {}
 }

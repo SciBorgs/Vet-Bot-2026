@@ -2,6 +2,7 @@ package org.sciborgs1155.robot;
 
 import static edu.wpi.first.units.Units.Meters;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.sciborgs1155.lib.UnitTestingUtil.fastForward;
 import static org.sciborgs1155.lib.UnitTestingUtil.reset;
@@ -10,6 +11,7 @@ import static org.sciborgs1155.lib.UnitTestingUtil.setupTests;
 import static org.sciborgs1155.robot.elevator.ElevatorConstants.DISTANCE_TOLERANCE;
 import static org.sciborgs1155.robot.elevator.ElevatorConstants.MAX_HEIGHT;
 import static org.sciborgs1155.robot.elevator.ElevatorConstants.MIN_HEIGHT;
+import static org.sciborgs1155.robot.elevator.ElevatorConstants.POSITION_TOLERANCE;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -64,5 +66,24 @@ class ElevatorTest {
     Command goToTarget = elevator.goTo(goal);
     run(goToTarget, 250); // 250 tick * 20 ms = 5 s
     assertEquals(goal, elevator.position(), DISTANCE_TOLERANCE);
+  }
+
+  @Test
+  void atPositionFalseBeforeMoving() {
+    assertFalse(elevator.atPosition(1.2));
+  }
+
+  @Test
+  void atPositionAfterGoTo() {
+    double h = 1.2;
+    run(elevator.goTo(h), 250);
+    assertTrue(elevator.atPosition(h));
+  }
+
+  @Test
+  void goToTwice() {
+    run(elevator.goTo(1.0), 250);
+    run(elevator.goTo(0.5), 250);
+    assertEquals(0.5, elevator.position(), POSITION_TOLERANCE.in(Meters));
   }
 }

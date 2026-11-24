@@ -80,6 +80,14 @@ public final class Elevator extends SubsystemBase implements AutoCloseable {
     return pid.atGoal();
   }
 
+  /**
+   * @param meters target height
+   * @return whether the measured position is within tolerance of the target
+   */
+  public boolean atPosition(double meters) {
+    return Math.abs(meters - hardware.position()) < POSITION_TOLERANCE.in(Meters);
+  }
+
   /** commands motors to run until a certain height is met */
   public Command goTo(DoubleSupplier height) {
     return runOnce(() -> pid.reset(hardware.position(), hardware.velocity()))
