@@ -68,8 +68,8 @@ public final class Ports {
   }
 
   public static final class Elevator {
-    public static final int FRONT_LEADER = 0;
-    public static final int BACK_FOLLOWER = 0;
+    public static final int FRONT_LEADER = 30; // TODO: real IDs
+    public static final int BACK_FOLLOWER = 31;
 
     private Elevator() {}
   }
