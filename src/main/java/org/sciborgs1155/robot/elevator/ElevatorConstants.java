@@ -34,13 +34,11 @@ public final class ElevatorConstants {
 
   public static final Current CURRENT_LIMIT = Amps.of(60);
 
-  public static final double HOMING_OUTPUT = -0.1;
-
   public static final LinearVelocity MAX_VELOCITY = MetersPerSecond.of(1);
   public static final LinearAcceleration MAX_ACCEL = MetersPerSecondPerSecond.of(2); // TODO: tune
 
-  public static final double HOMING_VOLTAGE = 0;
-  public static final double VELOCITY_TOLERANCE = 0;
+  public static final double HOMING_VOLTAGE = -1.0; // TODO: tune
+  public static final double VELOCITY_TOLERANCE = 0.01;
   public static final double DISTANCE_TOLERANCE = 0.5;
 
   private ElevatorConstants() {}

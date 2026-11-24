@@ -114,6 +114,7 @@ public final class Elevator extends SubsystemBase implements AutoCloseable {
             if (!stall.isRunning()) stall.restart();
           } else {
             stall.stop();
+            stall.reset();
           }
         })
         .until(
