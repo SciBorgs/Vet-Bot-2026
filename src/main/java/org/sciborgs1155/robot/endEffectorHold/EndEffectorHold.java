@@ -20,7 +20,7 @@ import org.sciborgs1155.robot.Robot;
 public class EndEffectorHold extends SubsystemBase implements AutoCloseable {
   private final SimpleMotor hardware;
   private final ProfiledPIDController pid =
-      new ProfiledPIDController(kP, kI, kP, new Constraints(MAX_VELOCITY, MAX_ACCEL));
+      new ProfiledPIDController(kP, kI, kD, new Constraints(MAX_VELOCITY, MAX_ACCEL));
   private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(kS, kV, kA);
 
   /** Instantiates the hardware */

@@ -31,7 +31,7 @@ public class EndEffectorPivot extends SubsystemBase implements AutoCloseable {
   private final EndEffectorIO hardware;
   private final ProfiledPIDController pid =
       new ProfiledPIDController(
-          kP, kI, kP, new Constraints(MAX_VELOCITY.in(MetersPerSecond), MAX_ACCEL));
+          kP, kI, kD, new Constraints(MAX_VELOCITY.in(MetersPerSecond), MAX_ACCEL));
 
   @NotLogged
   private final DoubleEntry tuningP = Tuning.entry("Robot/tuning/endeffector/tuningP", kP);
