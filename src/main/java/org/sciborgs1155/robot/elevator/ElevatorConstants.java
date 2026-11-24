@@ -30,7 +30,7 @@ public final class ElevatorConstants {
   public static final Distance MIN_HEIGHT = Meters.of(0);
   public static final Distance MAX_HEIGHT = Meters.of(1.5);
 
-  public static final double CONVERSION_FACTOR = GEARING * 2 * Math.PI * RADIUS.in(Meters);
+  public static final double CONVERSION_FACTOR = GEARING / (2 * Math.PI * RADIUS.in(Meters)); // motor rotations per meter
 
   public static final Current CURRENT_LIMIT = Amps.of(60);
 
