@@ -41,7 +41,7 @@ public final class DriveConstants {
   // TODO: Change central drivetrain constants as needed.
 
   // The type of module on the chassis
-  public static final ModuleType TYPE = ModuleType.TALON;
+  public static final ModuleType TYPE = ModuleType.SPARK;
 
   // The control loop used by all of the modules when driving
   public static final ControlMode DRIVE_MODE = ControlMode.OPEN_LOOP_VELOCITY;
